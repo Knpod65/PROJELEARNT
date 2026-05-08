@@ -5,11 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\AuditLog;
 use App\Models\DataSubjectRecord;
 use App\Models\DataSubjectRequest;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $recordStatusLabels = config('pdpa.record_status', []);
+        $consentStatusLabels = config('pdpa.consent_status', []);
+        $requestStatusLabels = config('pdpa.request_status', []);
+
         $totalRecords = DataSubjectRecord::count();
         $activeRecords = DataSubjectRecord::where('status', 'active')->count();
         $expiringRecords = DataSubjectRecord::retentionExpiringSoon()->count();
@@ -22,23 +27,26 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        $recordsByStatus = DataSubjectRecord::selectRaw('status, COUNT(*) as count')
+        $recordsByStatus = DataSubjectRecord::query()
+            ->select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
-            ->orderBy('count', 'desc')
-            ->get()
-            ->keyBy('status');
+            ->pluck('count', 'status')
+            ->map(fn ($count) => (int) $count)
+            ->all();
 
-        $recordsByConsent = DataSubjectRecord::selectRaw('consent_status, COUNT(*) as count')
+        $recordsByConsentStatus = DataSubjectRecord::query()
+            ->select('consent_status', DB::raw('count(*) as count'))
             ->groupBy('consent_status')
-            ->orderBy('count', 'desc')
-            ->get()
-            ->keyBy('consent_status');
+            ->pluck('count', 'consent_status')
+            ->map(fn ($count) => (int) $count)
+            ->all();
 
-        $requestsByStatus = DataSubjectRequest::selectRaw('status, COUNT(*) as count')
+        $requestsByStatus = DataSubjectRequest::query()
+            ->select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
-            ->orderBy('count', 'desc')
-            ->get()
-            ->keyBy('status');
+            ->pluck('count', 'status')
+            ->map(fn ($count) => (int) $count)
+            ->all();
 
         return view('dashboard.index', [
             'totalRecords' => $totalRecords,
@@ -48,8 +56,11 @@ class DashboardController extends Controller
             'pendingRequests' => $pendingRequests,
             'overdueRequests' => $overdueRequests,
             'recentLogs' => $recentLogs,
+            'recordStatusLabels' => $recordStatusLabels,
+            'consentStatusLabels' => $consentStatusLabels,
+            'requestStatusLabels' => $requestStatusLabels,
             'recordsByStatus' => $recordsByStatus,
-            'recordsByConsent' => $recordsByConsent,
+            'recordsByConsentStatus' => $recordsByConsentStatus,
             'requestsByStatus' => $requestsByStatus,
         ]);
     }

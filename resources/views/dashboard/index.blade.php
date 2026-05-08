@@ -54,7 +54,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Records by Status</h2>
         <div class="space-y-3">
-            @foreach(['active' => 'Active', 'archived' => 'Archived', 'pending_deletion' => 'Pending Deletion'] as $status => $label)
+            @foreach($recordStatusLabels as $status => $label)
                 <div class="flex justify-between items-center">
                     <span class="text-gray-600">{{ $label }}</span>
                     <span class="font-semibold text-gray-900">{{ $recordsByStatus[$status] ?? 0 }}</span>
@@ -66,10 +66,10 @@
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Records by Consent</h2>
         <div class="space-y-3">
-            @foreach(['given' => 'Consent Given', 'withdrawn' => 'Withdrawn', 'pending' => 'Pending'] as $consent => $label)
+            @foreach($consentStatusLabels as $consent => $label)
                 <div class="flex justify-between items-center">
                     <span class="text-gray-600">{{ $label }}</span>
-                    <span class="font-semibold text-gray-900">{{ $recordsByConsent[$consent] ?? 0 }}</span>
+                    <span class="font-semibold text-gray-900">{{ $recordsByConsentStatus[$consent] ?? 0 }}</span>
                 </div>
             @endforeach
         </div>
@@ -80,7 +80,7 @@
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Requests by Status</h2>
         <div class="space-y-3">
-            @foreach(['pending' => 'Pending', 'in_progress' => 'In Progress', 'completed' => 'Completed', 'rejected' => 'Rejected', 'withdrawn' => 'Withdrawn'] as $status => $label)
+            @foreach($requestStatusLabels as $status => $label)
                 <div class="flex justify-between items-center">
                     <span class="text-gray-600">{{ $label }}</span>
                     <span class="font-semibold text-gray-900">{{ $requestsByStatus[$status] ?? 0 }}</span>
@@ -96,7 +96,7 @@
                 <div class="flex justify-between items-start">
                     <div>
                         <p class="text-sm font-medium text-gray-900">{{ $log->action }}</p>
-                        <p class="text-xs text-gray-600">{{ $log->user->name ?? 'System' }} • {{ $log->created_at->diffForHumans() }}</p>
+                        <p class="text-xs text-gray-600">{{ $log->user->name ?? 'System' }} - {{ $log->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
             </div>
