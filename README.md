@@ -81,7 +81,7 @@ This repository is prepared for GitHub transfer and does not commit local-only o
 
 - `LOCAL_SETUP.md` for the current Windows workflow
 - `MAC_SETUP.md` for post-clone setup on macOS
-- `LEARNING_ROADMAP.md` for the 7-day Laravel study plan
+- `LEARNING_ROADMAP.md` for the 7-day Laravel study plan plus a supplement that connects handwritten Laravel architecture notes to the real PDPA project structure and code flow
 
 ## Health Checks Completed On The Current Work Computer
 
