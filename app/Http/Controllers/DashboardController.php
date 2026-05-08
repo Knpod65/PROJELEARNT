@@ -2,19 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
+use App\Models\AuditLog;
 use App\Models\DataSubjectRecord;
 use App\Models\DataSubjectRequest;
-use App\Models\AuditLog;
 
 class DashboardController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $totalRecords = DataSubjectRecord::count();

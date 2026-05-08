@@ -11,7 +11,7 @@
             <label class="block text-sm font-medium text-gray-900 mb-2">Data Subject Record *</label>
             <select name="data_subject_record_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
                 <option value="">Select Record</option>
-                @foreach(\App\Models\DataSubjectRecord::all() as $r)
+                @foreach($records as $r)
                     <option value="{{ $r->id }}">{{ $r->full_name }}</option>
                 @endforeach
             </select>

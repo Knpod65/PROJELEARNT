@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataSubjectRequest;
 use App\Models\DataSubjectRecord;
+use App\Models\DataSubjectRequest;
 use App\Services\AuditLogService;
 use Illuminate\Http\Request;
 
 class DataSubjectRequestController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $this->authorize('viewAny', DataSubjectRequest::class);
@@ -22,14 +17,14 @@ class DataSubjectRequestController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('requests.index', ['requests' => $requests]);
+        return view('data-subject-requests.index', ['requests' => $requests]);
     }
 
     public function create()
     {
         $this->authorize('create', DataSubjectRequest::class);
         $records = DataSubjectRecord::all();
-        return view('requests.create', ['records' => $records]);
+        return view('data-subject-requests.create', ['records' => $records]);
     }
 
     public function store(Request $request)
@@ -58,21 +53,20 @@ class DataSubjectRequestController extends Controller
 
         AuditLogService::logCreated($dataRequest, "Created {$dataRequest->request_type} request");
 
-        return redirect()->route('requests.show', $dataRequest)->with('success', 'Request created successfully.');
+        return redirect()->route('data-subject-requests.show', $dataRequest)->with('success', 'Request created successfully.');
     }
 
     public function show(DataSubjectRequest $dataRequest)
     {
         $this->authorize('view', $dataRequest);
         $dataRequest->load('dataSubjectRecord', 'createdBy', 'assignedTo');
-        return view('requests.show', ['request' => $dataRequest]);
+        return view('data-subject-requests.show', ['request' => $dataRequest]);
     }
 
     public function edit(DataSubjectRequest $dataRequest)
     {
         $this->authorize('update', $dataRequest);
-        $records = DataSubjectRecord::all();
-        return view('requests.edit', ['request' => $dataRequest, 'records' => $records]);
+        return view('data-subject-requests.edit', ['request' => $dataRequest]);
     }
 
     public function update(Request $request, DataSubjectRequest $dataRequest)
@@ -93,7 +87,7 @@ class DataSubjectRequestController extends Controller
 
         AuditLogService::logUpdated($dataRequest, $oldValues, $newValues, "Updated request status to {$dataRequest->status}");
 
-        return redirect()->route('requests.show', $dataRequest)->with('success', 'Request updated successfully.');
+        return redirect()->route('data-subject-requests.show', $dataRequest)->with('success', 'Request updated successfully.');
     }
 
     public function destroy(DataSubjectRequest $dataRequest)
@@ -104,6 +98,6 @@ class DataSubjectRequestController extends Controller
         AuditLogService::logDeleted($dataRequest, "Deleted {$requestType} request");
 
         $dataRequest->delete();
-        return redirect()->route('requests.index')->with('success', 'Request deleted successfully.');
+        return redirect()->route('data-subject-requests.index')->with('success', 'Request deleted successfully.');
     }
 }

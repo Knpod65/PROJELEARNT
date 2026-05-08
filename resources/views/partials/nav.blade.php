@@ -21,6 +21,9 @@
                             <a href="{{ route('data-subject-requests.index') }}" class="text-gray-600 hover:text-gray-900 {{ request()->routeIs('data-subject-requests.*') ? 'text-blue-600 font-semibold' : '' }}">
                                 <i class="fas fa-file-alt mr-2"></i>Requests
                             </a>
+                        @endif
+
+                        @if(auth()->user()->can('viewAny', App\Models\AuditLog::class))
                             <a href="{{ route('audit-logs.index') }}" class="text-gray-600 hover:text-gray-900 {{ request()->routeIs('audit-logs.*') ? 'text-blue-600 font-semibold' : '' }}">
                                 <i class="fas fa-history mr-2"></i>Audit Logs
                             </a>
